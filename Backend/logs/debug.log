@@ -1,0 +1,38 @@
+[2025-12-06 08:28:13] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-06 08:28:13] Login attempt for: admin1@hospital.com
+[2025-12-06 08:29:00] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-06 08:29:00] Login attempt for: admin1@hospital.com
+[2025-12-06 08:30:00] Raw Input: {"full_name":"patient","email":"patient@hospital.com","password":"Admin@123","role":"patient","phone":"0790391805","address":"Kigali"}
+[2025-12-06 08:30:00] Register attempt
+[2025-12-06 08:30:15] Raw Input: {"email":"patient@hospital.com","password":"Admin@123"}
+[2025-12-06 08:30:15] Login attempt for: patient@hospital.com
+[2025-12-06 08:33:52] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-06 08:33:52] Login attempt for: admin1@hospital.com
+[2025-12-06 08:39:01] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-06 08:39:01] Login attempt for: admin1@hospital.com
+[2025-12-06 08:39:10] Raw Input: {}
+[2025-12-06 08:39:45] Raw Input: {"email":"patient@hospital.com","password":"Admin@123"}
+[2025-12-06 08:39:45] Login attempt for: patient@hospital.com
+[2025-12-06 08:40:44] Raw Input: {}
+[2025-12-06 08:41:37] Raw Input: {"full_name":"doctor","email":"doctor@gmail.com","password":"Admin@123","role":"doctor","phone":"0790391805","address":"Kigali"}
+[2025-12-06 08:41:37] Register attempt
+[2025-12-06 08:41:54] Raw Input: {"email":"doctor@gmail.com","password":"Admin@123"}
+[2025-12-06 08:41:54] Login attempt for: doctor@gmail.com
+[2025-12-06 08:42:13] Raw Input: {"email":"patient@hospital.com","password":"Admin@123"}
+[2025-12-06 08:42:13] Login attempt for: patient@hospital.com
+[2025-12-06 08:45:24] Raw Input: {}
+[2025-12-06 08:50:28] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-06 08:50:28] Login attempt for: admin1@hospital.com
+[2025-12-06 08:50:37] Raw Input: {}
+[2025-12-06 08:50:52] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-06 08:50:52] Login attempt for: admin1@hospital.com
+[2025-12-06 09:02:28] Raw Input: {"full_name":"Administrator","email":"admin@hospital.com","password":"Admin@123","role":"admin","phone":"0790391805","address":"Kigali"}
+[2025-12-06 09:02:28] Register attempt
+[2025-12-06 09:02:46] Raw Input: {"email":"admin@hospital.com","password":"Admin@123"}
+[2025-12-06 09:02:46] Login attempt for: admin@hospital.com
+[2025-12-06 09:03:12] Raw Input: {}
+[2025-12-06 09:03:24] Raw Input: {"email":"admin@hospital.com","password":"Admin@123"}
+[2025-12-06 09:03:24] Login attempt for: admin@hospital.com
+[2025-12-06 22:14:50] Raw Input: {}
+[2025-12-06 22:17:55] Raw Input: {"email":"admin@hospital.com","password":"Admin@123"}
+[2025-12-06 22:17:55] Login attempt for: admin@hospital.com
