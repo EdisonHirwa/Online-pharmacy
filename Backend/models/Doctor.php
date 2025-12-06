@@ -39,5 +39,27 @@ class Doctor {
         $result = $stmt->get_result();
         return $result->fetch_assoc();
     }
+    // Update Doctor Schedule
+    public function updateSchedule($schedule_json) {
+        $query = "UPDATE " . $this->table . " SET schedule = ? WHERE doctor_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("si", $schedule_json, $this->doctor_id);
+        
+        if($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
+
+    // Get Schedule
+    public function getSchedule() {
+        $query = "SELECT schedule FROM " . $this->table . " WHERE doctor_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $this->doctor_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        return $row['schedule'];
+    }
 }
 ?>

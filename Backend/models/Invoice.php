@@ -21,5 +21,13 @@ class Invoice {
         $stmt->bind_param("ids", $this->patient_id, $this->amount, $this->description);
         return $stmt->execute();
     }
+
+    public function readByPatient($patient_id) {
+        $query = "SELECT * FROM " . $this->table . " WHERE patient_id = ? ORDER BY created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $patient_id);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
 }
 ?>

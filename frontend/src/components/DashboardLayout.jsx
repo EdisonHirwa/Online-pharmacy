@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import { styled, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { useColorMode } from '../context/ThemeContext';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -30,6 +31,8 @@ import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import PersonIcon from '@mui/icons-material/Person';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 const drawerWidth = 240;
 
@@ -81,6 +84,8 @@ const DashboardLayout = ({ children, title }) => {
     const [open, setOpen] = useState(true);
     const { logout, user } = useAuth();
     const navigate = useNavigate();
+    const theme = useTheme();
+    const { toggleColorMode } = useColorMode();
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -122,20 +127,66 @@ const DashboardLayout = ({ children, title }) => {
                 </>
             )}
             {user?.role === 'doctor' && (
-                <ListItemButton>
-                    <ListItemIcon>
-                        <AssignmentIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Appointments" />
-                </ListItemButton>
+                <>
+                    <ListItemButton onClick={() => navigate('/doctor/schedule')}>
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Schedule" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/doctor/patients')}>
+                        <ListItemIcon>
+                            <PeopleIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Patients" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/doctor/prescriptions')}>
+                        <ListItemIcon>
+                            <LocalHospitalIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Prescriptions" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/doctor/lab-orders')}>
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Lab Orders" />
+                    </ListItemButton>
+                </>
             )}
             {user?.role === 'patient' && (
-                <ListItemButton>
-                    <ListItemIcon>
-                        <LocalHospitalIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Doctors" />
-                </ListItemButton>
+                <>
+                    <ListItemButton onClick={() => navigate('/patient/find-doctors')}>
+                        <ListItemIcon>
+                            <PersonIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Find Doctors" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/patient/appointments')}>
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Appointments" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/patient/prescriptions')}>
+                        <ListItemIcon>
+                            <LocalHospitalIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Prescriptions" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/patient/lab-results')}>
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Lab Results" />
+                    </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/patient/billing')}>
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Billing" />
+                    </ListItemButton>
+                </>
             )}
         </React.Fragment>
     );
@@ -174,6 +225,9 @@ const DashboardLayout = ({ children, title }) => {
                         <Badge badgeContent={4} color="secondary">
                             <NotificationsIcon />
                         </Badge>
+                    </IconButton>
+                    <IconButton sx={{ ml: 1 }} onClick={toggleColorMode} color="inherit">
+                        {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
                     </IconButton>
                     <IconButton color="inherit" onClick={handleLogout} sx={{ ml: 2 }}>
                         <LogoutIcon />

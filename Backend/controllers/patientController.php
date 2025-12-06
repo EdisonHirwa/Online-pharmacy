@@ -41,8 +41,19 @@ if ($method === 'GET') {
         $doctor = new Doctor($conn);
         $result = $doctor->readAll();
         $doctors = array();
+        
+        // Basic filtering in PHP for simplicity 
+        $specialization = isset($_GET['specialization']) ? $_GET['specialization'] : '';
+        $department = isset($_GET['department']) ? $_GET['department'] : '';
+
         while ($row = $result->fetch_assoc()) {
-            array_push($doctors, $row);
+             $match = true;
+             if ($specialization && stripos($row['specialization'], $specialization) === false) $match = false;
+             if ($department && stripos($row['department'], $department) === false) $match = false;
+             
+             if ($match) {
+                array_push($doctors, $row);
+             }
         }
         echo json_encode($doctors);
     }
@@ -55,6 +66,36 @@ if ($method === 'GET') {
             array_push($appointments, $row);
         }
         echo json_encode($appointments);
+    }
+    elseif ($action === 'prescriptions') {
+        include_once '../models/Prescription.php';
+        $prescription = new Prescription($conn);
+        $result = $prescription->readByPatient($user_id);
+        $prescriptions = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($prescriptions, $row);
+        }
+        echo json_encode($prescriptions);
+    }
+    elseif ($action === 'lab_results') {
+        include_once '../models/LabTest.php';
+        $labTest = new LabTest($conn);
+        $result = $labTest->readByPatient($user_id);
+        $results = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($results, $row);
+        }
+        echo json_encode($results);
+    }
+    elseif ($action === 'invoices') {
+        include_once '../models/Invoice.php';
+        $invoice = new Invoice($conn);
+        $result = $invoice->readByPatient($user_id);
+        $invoices = array();
+        while ($row = $result->fetch_assoc()) {
+            array_push($invoices, $row);
+        }
+        echo json_encode($invoices);
     }
     elseif ($action === 'notifications') {
         include_once '../models/Notification.php';

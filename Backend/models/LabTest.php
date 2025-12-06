@@ -33,5 +33,30 @@ class LabTest {
         $result = $this->conn->query($query);
         return $result;
     }
+    public function readByDoctor($doctor_id) {
+        $query = "SELECT l.*, p_user.full_name as patient_name 
+                  FROM " . $this->table . " l 
+                  JOIN patients p ON l.patient_id = p.patient_id 
+                  JOIN users p_user ON p.patient_id = p_user.user_id 
+                  WHERE l.doctor_id = ? 
+                  ORDER BY l.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $doctor_id);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    public function readByPatient($patient_id) {
+        $query = "SELECT l.*, d_user.full_name as doctor_name 
+                  FROM " . $this->table . " l 
+                  JOIN doctors d ON l.doctor_id = d.doctor_id 
+                  JOIN users d_user ON d.doctor_id = d_user.user_id 
+                  WHERE l.patient_id = ? 
+                  ORDER BY l.created_at DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $patient_id);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
 }
 ?>
