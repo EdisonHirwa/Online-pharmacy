@@ -47,8 +47,12 @@ elseif ($method === 'POST') {
                 $appt = $a_stmt->get_result()->fetch_assoc();
 
                 include_once '../models/Notification.php';
+                include_once '../models/Logger.php';
                 $notify = new Notification($conn);
                 $notify->create($appt['patient_id'], "Your appointment has been confirmed.");
+                
+                $logger = new Logger($conn);
+                $logger->log($user_id, 'APPOINTMENT_CONFIRMED', "Appointment ID " . $data->appointment_id . " confirmed");
 
                 echo json_encode(array("message" => "Appointment confirmed."));
             } else {

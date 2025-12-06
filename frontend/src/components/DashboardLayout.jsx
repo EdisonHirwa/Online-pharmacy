@@ -113,6 +113,12 @@ const DashboardLayout = ({ children, title }) => {
                         </ListItemIcon>
                         <ListItemText primary="Reports" />
                     </ListItemButton>
+                    <ListItemButton onClick={() => navigate('/admin/audit_logs')}>
+                        <ListItemIcon>
+                            <AssignmentIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Audit Logs" />
+                    </ListItemButton>
                 </>
             )}
             {user?.role === 'doctor' && (

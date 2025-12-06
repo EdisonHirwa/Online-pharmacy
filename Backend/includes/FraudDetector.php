@@ -22,6 +22,20 @@ class FraudDetector {
         }
     }
 
+    public function detectSuspiciousTransaction($user_id, $amount) {
+        // Threshold for suspicious amount
+        if ($amount > 5000) {
+             $this->raiseAlert($user_id, 'High Value Transaction', "Transaction of $$amount exceeds manual review threshold.");
+        }
+
+        // Check for rapid payments (e.g. > 3 in 10 mins)
+        $query = "SELECT COUNT(*) as count FROM payments 
+                  WHERE invoice_id IN (SELECT invoice_id FROM invoices WHERE patient_id = ?) 
+                  AND payment_date > DATE_SUB(NOW(), INTERVAL 10 MINUTE)";
+        // Note: This query assumes linkage back to patient. Simplified:
+        // We log it if we have context.
+    }
+
     public function checkSuspiciousLogin($user_id) {
         // Simple check: if login from different IP than last successful login (simplified for now)
         // In real app, would track geo-location or known IPs

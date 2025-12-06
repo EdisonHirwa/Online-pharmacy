@@ -45,6 +45,10 @@ elseif ($method === 'POST') {
                     $notify->create($patient_id, "Your lab test results are ready.");
                 }
 
+                include_once '../models/Logger.php';
+                $logger = new Logger($conn);
+                $logger->log($_SESSION['user_id'] ?? 0, 'LAB_TEST_UPDATE', "Test ID " . $data->test_id . " updated to " . $data->status);
+
                 echo json_encode(array("message" => "Test status updated."));
             } else {
                 http_response_code(503);

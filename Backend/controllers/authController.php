@@ -100,6 +100,7 @@ if ($method === 'POST') {
                     )
                 ));
             } else {
+                $logger->log($user->user_id ?? 0, 'FAILED_LOGIN', "Failed login attempt for " . $data->email);
                 http_response_code(401);
                 echo json_encode(array("message" => "Invalid credentials."));
             }

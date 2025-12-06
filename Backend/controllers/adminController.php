@@ -107,9 +107,59 @@ if ($method === 'GET') {
             while ($row = $result->fetch_assoc()) {
                 fputcsv($output, $row);
             }
+        } elseif ($type === 'medical_records') {
+            fputcsv($output, array('Patient Name', 'Email', 'Appointment Date', 'Doctor', 'Status', 'Diagnosis/Prescription'));
+            // Join users, appointments, and prescriptions (simplified view)
+            $query = "SELECT u.full_name as patient, u.email, a.appointment_date, d.full_name as doctor, a.status, 
+                      COALESCE(p.medication, 'N/A') as medication
+                      FROM users u
+                      JOIN appointments a ON u.user_id = a.patient_id
+                      LEFT JOIN users d ON a.doctor_id = d.user_id
+                      LEFT JOIN prescriptions p ON a.appointment_id = p.appointment_id
+                      WHERE u.role = 'patient'";
+            $result = $conn->query($query);
+            while ($row = $result->fetch_assoc()) {
+                fputcsv($output, $row);
+            }
         }
         fclose($output);
         exit();
+    }
+}
+elseif ($method === 'POST') {
+    $data = json_decode(file_get_contents("php://input"));
+    $action = isset($_GET['action']) ? $_GET['action'] : '';
+    $logger = new Logger($conn);
+
+    if ($action === 'delete_user') {
+        if (!empty($data->user_id)) {
+            $query = "DELETE FROM users WHERE user_id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $data->user_id);
+            
+            if ($stmt->execute()) {
+                $logger->log($_SESSION['user_id'] ?? 0, 'DELETE_USER', "Deleted user ID " . $data->user_id);
+                echo json_encode(array("message" => "User deleted."));
+            } else {
+                http_response_code(503);
+                echo json_encode(array("message" => "Unable to delete user."));
+            }
+        }
+    }
+    elseif ($action === 'update_user') {
+        if (!empty($data->user_id)) {
+            $query = "UPDATE users SET full_name = ?, email = ?, role = ? WHERE user_id = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("sssi", $data->full_name, $data->email, $data->role, $data->user_id);
+            
+            if ($stmt->execute()) {
+                $logger->log($_SESSION['user_id'] ?? 0, 'UPDATE_USER', "Updated user ID " . $data->user_id);
+                echo json_encode(array("message" => "User updated."));
+            } else {
+                http_response_code(503);
+                echo json_encode(array("message" => "Unable to update user."));
+            }
+        }
     }
 }
 ?>

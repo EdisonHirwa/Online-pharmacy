@@ -49,6 +49,22 @@ const Reports = () => {
                                         </Button>
                                     </Paper>
                                 </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Paper sx={{ p: 2, bgcolor: '#e8f5e9' }}>
+                                        <Typography variant="subtitle1" fontWeight="bold">Medical Records</Typography>
+                                        <Typography variant="body2" color="textSecondary" paragraph>
+                                            Export comprehensive medical records including patient history and prescriptions for referrals.
+                                        </Typography>
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            startIcon={<GetAppIcon />}
+                                            onClick={() => handleExport('medical_records')}
+                                        >
+                                            Download CSV
+                                        </Button>
+                                    </Paper>
+                                </Grid>
                             </Grid>
                         </Box>
                     </Paper>

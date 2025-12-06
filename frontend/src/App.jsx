@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import Users from './pages/Users';
 import Reports from './pages/Reports';
+import AuditLogs from './pages/AuditLogs';
 import DoctorDashboard from './pages/DoctorDashboard';
 import PatientDashboard from './pages/PatientDashboard';
 import LabDashboard from './pages/LabDashboard';
@@ -43,6 +44,7 @@ function App() {
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/users" element={<Users />} />
               <Route path="/admin/reports" element={<Reports />} />
+              <Route path="/admin/audit_logs" element={<AuditLogs />} />
             </Route>
 
             <Route element={<ProtectedRoute allowedRoles={['doctor']} />}>

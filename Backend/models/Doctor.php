@@ -18,7 +18,7 @@ class Doctor {
 
     // Get All Doctors
     public function readAll() {
-        $query = "SELECT u.user_id, u.full_name, u.email, u.phone, d.specialization, d.department, d.consultation_fee 
+        $query = "SELECT u.user_id, u.full_name, u.email, u.phone, d.specialization, d.department, d.consultation_fee, d.is_available 
                   FROM " . $this->users_table . " u 
                   JOIN " . $this->table . " d ON u.user_id = d.doctor_id";
         
