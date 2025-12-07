@@ -57,3 +57,64 @@
 [2025-12-07 00:29:44] Login attempt for: patient@gmail.com
 [2025-12-07 00:30:10] Raw Input: {"email":"patient@hospital.com","password":"Admin@123"}
 [2025-12-07 00:30:10] Login attempt for: patient@hospital.com
+[2025-12-07 01:17:04] Raw Input: {}
+[2025-12-07 01:17:40] Raw Input: {"full_name":"Aministrator","email":"admin@hospital.com","password":"Admin@123","role":"admin","phone":"0790391805","address":"Kigali\nKigali"}
+[2025-12-07 01:17:40] Register attempt
+[2025-12-07 01:18:03] Raw Input: {"full_name":"Aministrator","email":"admin1@hospital.com","password":"Admin@123","role":"admin","phone":"0790391805","address":"Kigali\nKigali"}
+[2025-12-07 01:18:03] Register attempt
+[2025-12-07 01:18:14] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-07 01:18:14] Login attempt for: admin1@hospital.com
+[2025-12-07 01:20:46] Raw Input: {}
+[2025-12-07 01:20:56] Raw Input: {"email":"admin@hospital.com","password":"Admin123!"}
+[2025-12-07 01:20:56] Login attempt for: admin@hospital.com
+[2025-12-07 01:20:58] Raw Input: {"email":"admin@hospital.com","password":"Admin123!"}
+[2025-12-07 01:20:58] Login attempt for: admin@hospital.com
+[2025-12-07 01:21:00] Raw Input: {"email":"admin@hospital.com","password":"Admin123!"}
+[2025-12-07 01:21:00] Login attempt for: admin@hospital.com
+[2025-12-07 01:21:00] Raw Input: {"email":"admin@hospital.com","password":"Admin123!"}
+[2025-12-07 01:21:00] Login attempt for: admin@hospital.com
+[2025-12-07 01:21:01] Raw Input: {"email":"admin@hospital.com","password":"Admin123!"}
+[2025-12-07 01:21:01] Login attempt for: admin@hospital.com
+[2025-12-07 01:21:01] Raw Input: {"email":"admin@hospital.com","password":"Admin123!"}
+[2025-12-07 01:21:01] Login attempt for: admin@hospital.com
+[2025-12-07 01:22:12] Raw Input: {"full_name":"patient","email":"patient@hospital.com","password":"Admin@123","role":"patient","phone":"0790391805","address":"Kigali\nKigali"}
+[2025-12-07 01:22:12] Register attempt
+[2025-12-07 01:22:28] Raw Input: {"email":"patient@hospital.com","password":"Admin@123"}
+[2025-12-07 01:22:28] Login attempt for: patient@hospital.com
+[2025-12-07 01:44:09] Raw Input: {}
+[2025-12-07 01:44:20] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-07 01:44:20] Login attempt for: admin1@hospital.com
+[2025-12-07 01:45:59] Raw Input: {}
+[2025-12-07 01:46:15] Raw Input: {"email":"patient@hospital.com","password":"Admin@123"}
+[2025-12-07 01:46:15] Login attempt for: patient@hospital.com
+[2025-12-07 01:53:36] Raw Input: {}
+[2025-12-07 01:53:46] Raw Input: {"email":"admin1@hospital.com","password":"Admi\\@123"}
+[2025-12-07 01:53:46] Login attempt for: admin1@hospital.com
+[2025-12-07 01:53:50] Raw Input: {"email":"admin1@hospital.com","password":"Admi\\@123"}
+[2025-12-07 01:53:50] Login attempt for: admin1@hospital.com
+[2025-12-07 01:53:52] Raw Input: {"email":"admin1@hospital.com","password":"Admi\\@123"}
+[2025-12-07 01:53:52] Login attempt for: admin1@hospital.com
+[2025-12-07 01:53:59] Raw Input: {"email":"admin1@hospital.com","password":"Admin@123"}
+[2025-12-07 01:53:59] Login attempt for: admin1@hospital.com
+[2025-12-07 01:57:08] Raw Input: {}
+[2025-12-07 01:57:19] Raw Input: {"email":"patient@hospital.com","password":"Admin@123"}
+[2025-12-07 01:57:19] Login attempt for: patient@hospital.com
+[2025-12-07 02:01:37] Raw Input: {}
+[2025-12-07 02:01:50] Raw Input: {"email":"sarah.wilson@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:01:50] Login attempt for: sarah.wilson@hospital.com
+[2025-12-07 02:01:53] Raw Input: {"email":"sarah.wilson@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:01:53] Login attempt for: sarah.wilson@hospital.com
+[2025-12-07 02:01:53] Raw Input: {"email":"sarah.wilson@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:01:53] Login attempt for: sarah.wilson@hospital.com
+[2025-12-07 02:01:54] Raw Input: {"email":"sarah.wilson@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:01:54] Login attempt for: sarah.wilson@hospital.com
+[2025-12-07 02:01:54] Raw Input: {"email":"sarah.wilson@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:01:54] Login attempt for: sarah.wilson@hospital.com
+[2025-12-07 02:02:31] Raw Input: {"email":"james.chen@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:02:31] Login attempt for: james.chen@hospital.com
+[2025-12-07 02:02:32] Raw Input: {"email":"james.chen@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:02:32] Login attempt for: james.chen@hospital.com
+[2025-12-07 02:02:32] Raw Input: {"email":"james.chen@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:02:32] Login attempt for: james.chen@hospital.com
+[2025-12-07 02:02:32] Raw Input: {"email":"james.chen@hospital.com","password":"Doctor123!"}
+[2025-12-07 02:02:32] Login attempt for: james.chen@hospital.com

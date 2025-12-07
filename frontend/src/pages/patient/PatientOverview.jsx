@@ -21,23 +21,22 @@ const PatientOverview = () => {
 
     const fetchData = async () => {
         try {
-            const aptRes = await axios.get('http://localhost/Online_pharmacy/Backend/controllers/patientController.php?action=appointments', { withCredentials: true });
-            setAppointments(aptRes.data);
+            // Use optimized metrics endpoint
+            const metricsRes = await axios.get(
+                'http://localhost/Online_pharmacy/Backend/controllers/patientController.php?action=metrics',
+                { withCredentials: true }
+            );
 
-            const prescRes = await axios.get('http://localhost/Online_pharmacy/Backend/controllers/patientController.php?action=prescriptions', { withCredentials: true });
-            setPrescriptions(prescRes.data);
-
-            const invRes = await axios.get('http://localhost/Online_pharmacy/Backend/controllers/patientController.php?action=invoices', { withCredentials: true });
-            const unpaid = invRes.data.filter(inv => inv.status === 'unpaid').length;
-            setUnpaidBills(unpaid);
-
+            setAppointments([{ count: metricsRes.data.upcoming_appointments }]); // Mock structure for widget display
+            setPrescriptions(Array(metricsRes.data.active_prescriptions).fill({})); // Mock for length
+            setUnpaidBills(metricsRes.data.unpaid_invoices || 0);
         } catch (error) {
             console.error("Error fetching patient data", error);
         }
     };
 
     const widgets = [
-        { title: 'Upcoming Appointments', value: appointments.filter(a => new Date(a.appointment_date) > new Date()).length, icon: <CalendarTodayIcon fontSize="large" color="primary" />, link: '/patient/appointments' },
+        { title: 'Upcoming Appointments', value: appointments[0]?.count || 0, icon: <CalendarTodayIcon fontSize="large" color="primary" />, link: '/patient/appointments' },
         { title: 'Prescriptions', value: prescriptions.length, icon: <MedicalServicesIcon fontSize="large" color="secondary" />, link: '/patient/prescriptions' },
         { title: 'Unpaid Bills', value: unpaidBills, icon: <ReceiptLongIcon fontSize="large" color="error" />, link: '/patient/billing' },
     ];

@@ -49,10 +49,30 @@ const LabDashboard = () => {
                         <List>
                             {tests.map((test, index) => (
                                 <React.Fragment key={test.test_id}>
-                                    <ListItem alignItems="flex-start">
+                                    <ListItem alignItems="flex-start" secondaryAction={
+                                        test.status !== 'completed' && (
+                                            <Button variant="contained" component="label" size="small">
+                                                Upload Report
+                                                <input type="file" hidden onChange={(e) => handleUpload(e, test.test_id)} />
+                                            </Button>
+                                        )
+                                    }>
                                         <ListItemText
                                             primary={`Test: ${test.test_name}`}
-                                            secondary={`Patient: ${test.patient_name} | Doctor: ${test.doctor_name} | Status: ${test.status}`}
+                                            secondary={
+                                                <React.Fragment>
+                                                    <Typography
+                                                        component="span"
+                                                        variant="body2"
+                                                        color="text.primary"
+                                                    >
+                                                        {`Patient: ${test.patient_name} | Doctor: ${test.doctor_name}`}
+                                                    </Typography>
+                                                    {` - Status: ${test.status}`}
+                                                    {test.report_path && <br />}
+                                                    {test.report_path && <a href={test.report_path} target="_blank" rel="noopener noreferrer">View Report</a>}
+                                                </React.Fragment>
+                                            }
                                         />
                                     </ListItem>
                                     {index < tests.length - 1 && <Divider variant="inset" component="li" />}
@@ -64,9 +84,32 @@ const LabDashboard = () => {
                         </List>
                     </Paper>
                 </Grid>
-            </Grid>
-        </Container>
+            </Grid >
+        </Container >
     );
+};
+
+// Add handleUpload function inside component
+const handleUpload = async (e, testId) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('report', file);
+    formData.append('test_id', testId);
+    formData.append('status', 'completed');
+
+    try {
+        await axios.post('http://localhost/Online_pharmacy/Backend/controllers/labController.php?action=update_status', formData, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        fetchTests(); // Refresh list
+    } catch (error) {
+        console.error("Error uploading report", error);
+    }
 };
 
 export default LabDashboard;

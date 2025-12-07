@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Paper, Typography, Grid, TextField, Button, Card, CardContent, CardActions, Dialog, DialogTitle, DialogContent, DialogActions, Alert, Box } from '@mui/material';
+import { Typography, Grid, Card, CardContent, CardActions, Dialog, DialogTitle, DialogContent, DialogActions, Alert, Button, TextField } from '@mui/material';
 import DashboardLayout from '../../components/DashboardLayout';
 
 const PatientFindDoctors = () => {
     const [doctors, setDoctors] = useState([]);
-    const [filters, setFilters] = useState({ specialization: '', department: '' });
     const [bookDialog, setBookDialog] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
     const [bookingData, setBookingData] = useState({ date: '', notes: '' });
@@ -13,22 +12,23 @@ const PatientFindDoctors = () => {
 
     useEffect(() => {
         fetchDoctors();
-    }, [filters]); // Re-fetch when filters change (debouncing would be better in prod)
+    }, []);
 
     const fetchDoctors = async () => {
         try {
-            const params = new URLSearchParams(filters).toString();
-            const response = await axios.get(`http://localhost/Online_pharmacy/Backend/controllers/patientController.php?action=doctors&${params}`, {
+            const response = await axios.get('http://localhost/Online_pharmacy/Backend/controllers/patientController.php?action=doctors', {
                 withCredentials: true
             });
-            setDoctors(response.data);
+            if (Array.isArray(response.data)) {
+                setDoctors(response.data);
+            } else {
+                console.error("Invalid response format for doctors:", response.data);
+                setDoctors([]);
+            }
         } catch (error) {
             console.error("Error fetching doctors", error);
+            setDoctors([]);
         }
-    };
-
-    const handleFilterChange = (e) => {
-        setFilters({ ...filters, [e.target.name]: e.target.value });
     };
 
     const openBookDialog = (doctor) => {
@@ -57,37 +57,12 @@ const PatientFindDoctors = () => {
     };
 
     return (
-        <DashboardLayout title="Find a Doctor">
-            <Paper sx={{ p: 2, mb: 3 }}>
-                <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} md={5}>
-                        <TextField
-                            fullWidth
-                            label="Filter by Specialization"
-                            name="specialization"
-                            value={filters.specialization}
-                            onChange={handleFilterChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={5}>
-                        <TextField
-                            fullWidth
-                            label="Filter by Department"
-                            name="department"
-                            value={filters.department}
-                            onChange={handleFilterChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={2}>
-                        <Button fullWidth variant="contained" onClick={fetchDoctors}>Search</Button>
-                    </Grid>
-                </Grid>
-            </Paper>
+        <DashboardLayout title="Available Doctors">
 
             <Grid container spacing={3}>
                 {doctors.length > 0 ? (
                     doctors.map((doc) => (
-                        <Grid item xs={12} md={4} key={doc.doctor_id}>
+                        <Grid size={{ xs: 12, md: 4 }} key={doc.doctor_id}>
                             <Card>
                                 <CardContent>
                                     <Typography variant="h6" component="div">
@@ -108,7 +83,7 @@ const PatientFindDoctors = () => {
                         </Grid>
                     ))
                 ) : (
-                    <Grid item xs={12}>
+                    <Grid size={{ xs: 12 }}>
                         <Typography variant="body1" align="center">No doctors found matching filters.</Typography>
                     </Grid>
                 )}

@@ -72,16 +72,51 @@ if ($method === 'GET') {
         }
         echo json_encode($orders);
     }
+    elseif ($action === 'metrics') {
+        // Return dashboard metrics for doctor
+        $metrics = array();
+        
+        // Total unique patients from appointments
+        $query = "SELECT COUNT(DISTINCT patient_id) as total FROM appointments WHERE doctor_id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $metrics['total_patients'] = $stmt->get_result()->fetch_assoc()['total'];
+        
+        // Upcoming appointments today
+        $query = "SELECT COUNT(*) as total FROM appointments WHERE doctor_id = ? AND DATE(appointment_date) = CURDATE() AND status != 'cancelled'";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $metrics['appointments_today'] = $stmt->get_result()->fetch_assoc()['total'];
+        
+        // Pending lab tests
+        include_once '../models/LabTest.php';
+        $query = "SELECT COUNT(*) as total FROM lab_tests WHERE doctor_id = ? AND status = 'pending'";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $metrics['pending_lab_tests'] = $stmt->get_result()->fetch_assoc()['total'];
+        
+        echo json_encode($metrics);
+    }
 }
 // POST Requests
 elseif ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
     $action = isset($_GET['action']) ? $_GET['action'] : '';
 
+
+include_once '../models/Logger.php';
+$logger = new Logger($conn);
+
+// ... existing code ...
+
     if ($action === 'update_schedule') {
         $doctor = new Doctor($conn);
         $doctor->doctor_id = $user_id;
         if ($doctor->updateSchedule(json_encode($data->schedule))) {
+            $logger->log($user_id, 'SCHEDULE_UPDATE', 'Doctor updated availability schedule');
             echo json_encode(array("message" => "Schedule updated."));
         } else {
             http_response_code(503);
@@ -99,6 +134,7 @@ elseif ($method === 'POST') {
         $prescription->appointment_id = isset($data->appointment_id) ? $data->appointment_id : null;
 
         if ($prescription->create()) {
+            $logger->log($user_id, 'PRESCRIPTION_ISSUED', "Prescription issued to Patient ID: " . $data->patient_id);
             echo json_encode(array("message" => "Prescription issued."));
         } else {
             http_response_code(503);
@@ -114,41 +150,14 @@ elseif ($method === 'POST') {
 
         if ($labTest->create()) {
              // Notify Lab (Optional: Implement notification logic)
+            $logger->log($user_id, 'LAB_ORDER_CREATED', "Lab test ordered for Patient ID: " . $data->patient_id);
             echo json_encode(array("message" => "Lab test ordered."));
         } else {
             http_response_code(503);
             echo json_encode(array("message" => "Unable to order lab test."));
         }
     }
-    elseif ($action === 'confirm_appointment') {
-        if (!empty($data->appointment_id)) {
-            $query = "UPDATE appointments SET status = 'confirmed' WHERE appointment_id = ?";
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param("i", $data->appointment_id);
-            
-            if ($stmt->execute()) {
-                // Get patient ID
-                $a_query = "SELECT patient_id FROM appointments WHERE appointment_id = ?";
-                $a_stmt = $conn->prepare($a_query);
-                $a_stmt->bind_param("i", $data->appointment_id);
-                $a_stmt->execute();
-                $appt = $a_stmt->get_result()->fetch_assoc();
-
-                include_once '../models/Notification.php';
-                include_once '../models/Logger.php';
-                $notify = new Notification($conn);
-                $notify->create($appt['patient_id'], "Your appointment has been confirmed.");
-                
-                $logger = new Logger($conn);
-                $logger->log($user_id, 'APPOINTMENT_CONFIRMED', "Appointment ID " . $data->appointment_id . " confirmed");
-
-                echo json_encode(array("message" => "Appointment confirmed."));
-            } else {
-                http_response_code(503);
-                echo json_encode(array("message" => "Unable to confirm appointment."));
-            }
-        }
-    }
+// ... confirm_appointment (already logged) ...
     // Add Consultation Notes
     elseif ($action === 'add_consultation_notes') {
          if (!empty($data->appointment_id) && !empty($data->notes)) {
@@ -157,6 +166,7 @@ elseif ($method === 'POST') {
              $stmt = $conn->prepare($query);
              $stmt->bind_param("si", $data->notes, $data->appointment_id);
              if ($stmt->execute()) {
+                 $logger->log($user_id, 'CONSULTATION_NOTES_ADDED', "Notes added to Appointment ID: " . $data->appointment_id);
                  echo json_encode(array("message" => "Consultation notes added."));
              } else {
                  http_response_code(503);

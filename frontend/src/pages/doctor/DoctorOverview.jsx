@@ -20,19 +20,16 @@ const DoctorOverview = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                // Fetch patients count
-                const patientsRes = await axios.get('http://localhost/Online_pharmacy/Backend/controllers/doctorController.php?action=patients', { withCredentials: true });
-                // Fetch schedule/appointments count
-                const scheduleRes = await axios.get('http://localhost/Online_pharmacy/Backend/controllers/doctorController.php?action=schedule', { withCredentials: true });
-
-                // We'll use the lengths of these arrays as proxy stats
-                // Note: 'patients' endpoint returns an array of patients
-                // 'schedule' endpoint returns { schedule: [...] }
+                // Fetch real metrics from backend
+                const metricsRes = await axios.get(
+                    'http://localhost/Online_pharmacy/Backend/controllers/doctorController.php?action=metrics',
+                    { withCredentials: true }
+                );
 
                 setStats({
-                    patients: Array.isArray(patientsRes.data) ? patientsRes.data.length : 0,
-                    appointments: scheduleRes.data.schedule ? scheduleRes.data.schedule.length : 0,
-                    pendingReports: 0 // Placeholder as we don't have a count endpoint yet, or need to query lab orders 
+                    patients: metricsRes.data.total_patients || 0,
+                    appointments: metricsRes.data.appointments_today || 0,
+                    pendingReports: metricsRes.data.pending_lab_tests || 0
                 });
             } catch (error) {
                 console.error("Error fetching overview stats", error);

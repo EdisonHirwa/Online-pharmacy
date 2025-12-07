@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Button, Box } from '@mui/material';
 import DashboardLayout from '../../components/DashboardLayout';
+import { useNavigate } from 'react-router-dom';
 
 const PatientAppointments = () => {
     const [appointments, setAppointments] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -23,6 +25,16 @@ const PatientAppointments = () => {
     return (
         <DashboardLayout title="My Appointments">
             <Paper sx={{ p: 3 }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                    <Typography variant="h6">Appointment History</Typography>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/patient/find-doctors')}
+                    >
+                        Book New Appointment
+                    </Button>
+                </Box>
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -38,7 +50,7 @@ const PatientAppointments = () => {
                                 appointments.map((apt) => (
                                     <TableRow key={apt.appointment_id}>
                                         <TableCell>{new Date(apt.appointment_date).toLocaleString()}</TableCell>
-                                        <TableCell>{apt.doctor_name || 'Doctor'}</TableCell> {/* Ensure controller returns doctor_name joined */}
+                                        <TableCell>{apt.doctor_name || 'Doctor'}</TableCell>
                                         <TableCell>
                                             <Chip
                                                 label={apt.status}

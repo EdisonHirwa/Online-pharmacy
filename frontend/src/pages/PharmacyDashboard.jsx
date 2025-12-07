@@ -49,7 +49,16 @@ const PharmacyDashboard = () => {
                         <List>
                             {prescriptions.map((p, index) => (
                                 <React.Fragment key={p.prescription_id}>
-                                    <ListItem alignItems="flex-start">
+                                    <ListItem alignItems="flex-start" secondaryAction={
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            size="small"
+                                            onClick={() => handleDispense(p.prescription_id)}
+                                        >
+                                            Dispense & Bill
+                                        </Button>
+                                    }>
                                         <ListItemText
                                             primary={`Medications: ${p.medications}`}
                                             secondary={`Patient: ${p.patient_name} | Doctor: ${p.doctor_name} | Instructions: ${p.instructions}`}
@@ -67,6 +76,20 @@ const PharmacyDashboard = () => {
             </Grid>
         </Container>
     );
+};
+
+const handleDispense = async (id) => {
+    if (!window.confirm("Are you sure you want to dispense this prescription? This will generate a bill.")) return;
+    try {
+        await axios.post('http://localhost/Online_pharmacy/Backend/controllers/pharmacyController.php?action=dispense',
+            { prescription_id: id },
+            { withCredentials: true }
+        );
+        fetchPrescriptions();
+    } catch (error) {
+        console.error("Error dispensing", error);
+        alert("Failed to dispense.");
+    }
 };
 
 export default PharmacyDashboard;

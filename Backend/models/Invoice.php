@@ -29,5 +29,12 @@ class Invoice {
         $stmt->execute();
         return $stmt->get_result();
     }
+
+    public function generate($patient_id, $amount, $description) {
+        $query = "INSERT INTO " . $this->table . " (patient_id, amount, description, status) VALUES (?, ?, ?, 'unpaid')";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ids", $patient_id, $amount, $description);
+        return $stmt->execute();
+    }
 }
 ?>

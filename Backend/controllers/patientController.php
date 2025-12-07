@@ -107,10 +107,42 @@ if ($method === 'GET') {
         }
         echo json_encode($notifications);
     }
+    elseif ($action === 'metrics') {
+        // Return optimized dashboard metrics
+        $metrics = array();
+        
+        // Upcoming appointments
+        $query = "SELECT COUNT(*) as total FROM appointments WHERE patient_id = ? AND appointment_date > NOW() AND status != 'cancelled'";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $metrics['upcoming_appointments'] = $stmt->get_result()->fetch_assoc()['total'];
+        
+        // Active prescriptions (pending)
+        $query = "SELECT COUNT(*) as total FROM prescriptions WHERE patient_id = ? AND status = 'pending'";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $metrics['active_prescriptions'] = $stmt->get_result()->fetch_assoc()['total'];
+        
+        // Unpaid invoices
+        $query = "SELECT COUNT(*) as total FROM invoices WHERE patient_id = ? AND status = 'unpaid'";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $metrics['unpaid_invoices'] = $stmt->get_result()->fetch_assoc()['total'];
+        
+        echo json_encode($metrics);
+    }
 }
 elseif ($method === 'POST') {
     $data = json_decode(file_get_contents("php://input"));
     $action = isset($_GET['action']) ? $_GET['action'] : '';
+
+include_once '../models/Logger.php';
+$logger = new Logger($conn);
+
+// ... 
 
     if ($action === 'book_appointment') {
         $appointment = new Appointment($conn);
@@ -124,6 +156,8 @@ elseif ($method === 'POST') {
             include_once '../models/Notification.php';
             $notify = new Notification($conn);
             $notify->create($data->doctor_id, "New appointment booked for " . $data->date);
+
+            $logger->log($user_id, 'APPOINTMENT_BOOKED', "Appointment booked with Doctor ID: " . $data->doctor_id);
 
             http_response_code(201);
             echo json_encode(array("message" => "Appointment booked successfully."));
@@ -141,6 +175,7 @@ elseif ($method === 'POST') {
         $patient->medical_history = $data->medical_history;
 
         if($patient->updateProfile()) {
+            $logger->log($user_id, 'PATIENT_PROFILE_UPDATED', "Patient profile details updated");
             echo json_encode(array("message" => "Profile updated."));
         } else {
             http_response_code(503);

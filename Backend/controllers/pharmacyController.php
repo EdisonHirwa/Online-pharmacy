@@ -39,11 +39,23 @@ elseif ($method === 'POST') {
                 $p_stmt->execute();
                 $presc = $p_stmt->get_result()->fetch_assoc();
 
+                // 1. Generate Invoice (Mock cost: $50 fixed for now)
+                include_once '../models/Invoice.php';
+                $invoice = new Invoice($conn);
+                $cost = 50.00; 
+                $invoice->generate($presc['patient_id'], $cost, "Pharmacy - Prescription #" . $data->prescription_id);
+
+                // 2. Notify Patient
                 include_once '../models/Notification.php';
                 $notify = new Notification($conn);
-                $notify->create($presc['patient_id'], "Your prescription gets ready. Please collect it.");
+                $notify->create($presc['patient_id'], "Your prescription is ready. Bill of $$cost generated.");
 
-                echo json_encode(array("message" => "Prescription dispensed."));
+                // 3. Log Action
+                include_once '../models/Logger.php';
+                $logger = new Logger($conn);
+                $logger->log($_SESSION['user_id'] ?? 0, 'PHARMACY_DISPENSE', "Prescription #" . $data->prescription_id . " dispensed. Invoice generated.");
+
+                echo json_encode(array("message" => "Prescription dispensed and bill generated."));
             } else {
                 http_response_code(503);
                 echo json_encode(array("message" => "Unable to dispense."));

@@ -169,3 +169,60 @@ CREATE TABLE IF NOT EXISTS fraud_alerts (
 -- Hash: $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi (This is just an example hash, in real app generate properly)
 INSERT INTO users (full_name, email, password_hash, role) VALUES 
 ('System Admin', 'admin@hospital.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+
+-- ============================================
+-- AUTOMATED TRIGGERS
+-- ============================================
+
+-- 1. Appointment Notification Trigger
+DROP TRIGGER IF EXISTS notify_appointment_created;
+DELIMITER //
+CREATE TRIGGER notify_appointment_created
+AFTER INSERT ON appointments
+FOR EACH ROW
+BEGIN
+    INSERT INTO notifications (user_id, message, created_at)
+    VALUES (NEW.doctor_id, CONCAT('New appointment booked for ', DATE_FORMAT(NEW.appointment_date, '%Y-%m-%d %H:%i')), NOW());
+    INSERT INTO notifications (user_id, message, created_at)
+    VALUES (NEW.patient_id, CONCAT('Your appointment is scheduled for ', DATE_FORMAT(NEW.appointment_date, '%Y-%m-%d %H:%i')), NOW());
+END//
+DELIMITER ;
+
+-- 2. Lab Test Completion Trigger
+DROP TRIGGER IF EXISTS notify_lab_test_complete;
+DELIMITER //
+CREATE TRIGGER notify_lab_test_complete
+AFTER UPDATE ON lab_tests
+FOR EACH ROW
+BEGIN
+    IF NEW.status = 'completed' AND OLD.status != 'completed' THEN
+        INSERT INTO notifications (user_id, message, created_at)
+        VALUES (NEW.patient_id, CONCAT('Your lab test results for "', NEW.test_name, '" are ready to view'), NOW());
+    END IF;
+END//
+DELIMITER ;
+
+-- 3. Prescription Notification Trigger
+DROP TRIGGER IF EXISTS notify_prescription_issued;
+DELIMITER //
+CREATE TRIGGER notify_prescription_issued
+AFTER INSERT ON prescriptions
+FOR EACH ROW
+BEGIN
+    INSERT INTO notifications (user_id, message, created_at)
+    VALUES (NEW.patient_id, 'A new prescription has been issued for you', NOW());
+END//
+DELIMITER ;
+
+-- 4. Lab Test Order Notification Trigger
+DROP TRIGGER IF EXISTS notify_lab_order_created;
+DELIMITER //
+CREATE TRIGGER notify_lab_order_created
+AFTER INSERT ON lab_tests
+FOR EACH ROW
+BEGIN
+    INSERT INTO notifications (user_id, message, created_at)
+    SELECT user_id, CONCAT('New lab test ordered: ', NEW.test_name), NOW()
+    FROM users WHERE role = 'lab_technician';
+END//
+DELIMITER ;
